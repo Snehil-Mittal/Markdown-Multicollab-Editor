@@ -1,0 +1,16 @@
+{
+  "name": "markdown-editor-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1",
+    "ws": "^8.8.0",
+    "y-websocket": "^1.4.3"
+  }
+}
