@@ -7,14 +7,23 @@ const LocalStrategy = require("passport-local").Strategy;
 const { admin, admin_password, secret } = require("./config");
 const { v4: uuid } = require("uuid");
 const cors = require("cors");
+const mongoose = require("mongoose");
+const Room = require("./Models/Room/Room");
 
 var app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-converter = new showdown.Converter();
-converter.setOption("simplifiedAutoLink", "true");
+mongoose.connect("mongodb://localhost:27017/ColabApp");
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", function () {
+  console.log("connected!!!");
+});
+
+// converter = new showdown.Converter();
+// converter.setOption("simplifiedAutoLink", "true");
 
 const servers = ["quill-demo-awareness-room", "asdfasdf"];
 
@@ -28,48 +37,62 @@ passport.use(
   })
 );
 
-app.get("/createNew", (req, res) => {
-  const id = uuid();
+app.get("/createNew", async (req, res) => {
+  const newRoom = new Room({ version: 0 });
+  const id = newRoom._id;
   console.log(id);
-  servers.push(id);
+  await newRoom.save();
   res.json({ id });
 });
 
-app.get("/:id", (req, res) => {
+app.get("/:id", async (req, res) => {
   const id = req.params.id;
   let isPresent = false;
-  if (servers.includes(id)) {
+  const room = await Room.findById(id);
+  if (room) {
     isPresent = true;
-  }
-  return res.json({ isPresent });
+    return res.json({ room, isPresent });
+  } else return res.json({ isPresent });
 });
 
-app.post(
-  "/login",
-  passport.authenticate("local", { session: false, failWithError: true }),
-  function (req, res) {
-    res.send("Authenticated");
-  }
-);
+app.post("/:id", async (req, res) => {
+  const body = req.body.text;
+  console.log(req.body);
+  const id = req.params.id;
+  const room = await Room.findById(id);
+  if (!room) return res.status(404).send();
+  room.values.push(body);
+  room.version = room.version + 1;
+  await room.save();
+  res.send({ success: true });
+});
 
-app.post(
-  "/convert",
-  passport.authenticate("local", { session: false, failWithError: true }),
-  function (req, res, next) {
-    console.log(req.body);
-    if (typeof req.body.content == "undefined" || req.body.content == null) {
-      res.json(["error", "No data found"]);
-    } else {
-      text = req.body.content;
-      html = converter.makeHtml(text);
-      console.log(html);
-      res.json(["markdown", html]);
-    }
-  },
-  function (err, req, res, next) {
-    return res.status(401).send({ success: false, message: err });
-  }
-);
+// app.post(
+//   "/login",
+//   passport.authenticate("local", { session: false, failWithError: true }),
+//   function (req, res) {
+//     res.send("Authenticated");
+//   }
+// );
+
+// app.post(
+//   "/convert",
+//   passport.authenticate("local", { session: false, failWithError: true }),
+//   function (req, res, next) {
+//     console.log(req.body);
+//     if (typeof req.body.content == "undefined" || req.body.content == null) {
+//       res.json(["error", "No data found"]);
+//     } else {
+//       text = req.body.content;
+//       html = converter.makeHtml(text);
+//       console.log(html);
+//       res.json(["markdown", html]);
+//     }
+//   },
+//   function (err, req, res, next) {
+//     return res.status(401).send({ success: false, message: err });
+//   }
+// );
 
 const server = app.listen(3001, function () {
   console.log("Server running on port 3001");
