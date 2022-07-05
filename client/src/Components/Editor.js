@@ -71,17 +71,17 @@ const Editor = (props) => {
         });
         setUsers(newUsers);
       });
-      setTimeout(() => {
-        console.log(provider.current.connected);
-        awareness.current.getStates().forEach((state) => {
-          if (state.user) {
-            count = count + 1;
-          }
-        });
-        if (count === 1 && data.current.length > 0) {
-          quill.current.setText(data.current[data.current.length - 1]);
-        }
-      }, 1000);
+      // setTimeout(() => {
+      //   console.log(provider.current.connected);
+      //   awareness.current.getStates().forEach((state) => {
+      //     if (state.user) {
+      //       count = count + 1;
+      //     }
+      //   });
+      //   if (count === 1 && data.current.length > 0) {
+      //     quill.current.setText(data.current[data.current.length - 1]);
+      //   }
+      // }, 1000);
     } catch (e) {
       console.log(e);
     }
