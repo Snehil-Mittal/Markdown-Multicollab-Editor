@@ -1,52 +1,83 @@
-import React, { useState, useEffect } from 'react';
-import Split from 'react-split';
-import Editor from './Editor';
-import User from './User';
+import React, { useState, useEffect } from "react";
+import Split from "react-split";
+import Editor from "./Editor";
+import User from "./User";
 import DoUsername from "do_username";
+import ActiveUsersModal from "./ActiveUsersModal";
 
-const WorkArea=()=> {
-	const [orientation, setOrientation] = useState('horizontal');
-	const [name, setName] = useState(DoUsername.generate(15));
-	const [show, setShow] = useState(true);
+const WorkArea = () => {
+  const [orientation, setOrientation] = useState("horizontal");
+  const [name, setName] = useState(DoUsername.generate(15));
+  const [show, setShow] = useState(true);
+  const [activeUsersmodalShow, setActiveUsersModalShow] = useState(false);
+  const [activeUsers, setActiveUsers] = useState([]);
 
-	useEffect(() => {
-		let changeOrientation = () => {
-			setOrientation(window.innerWidth < 600 ? 'vertical' : 'horizontal');
-		};
-		changeOrientation();
-		window.onresize = changeOrientation;
-	}, []);
+  useEffect(() => {
+    let changeOrientation = () => {
+      setOrientation(window.innerWidth < 600 ? "vertical" : "horizontal");
+    };
+    changeOrientation();
+    window.onresize = changeOrientation;
+  }, []);
 
-	const setUsername=(Uname)=>{
-		setName(Uname);
-	}
+  const setUsername = (Uname) => {
+    setName(Uname);
+  };
 
-	const setModalShow=(show)=>{
-		setShow(show);
-	}
+  const setModalShow = (show) => {
+    setShow(show);
+  };
 
-	return (
-		<div className="work-area work">
-			{show && <User setName={setUsername} setShow={setModalShow}/>}
-			{!show &&
-			<Split
-				className="wrapper-card"
-				sizes={[50, 50]}
-				minSize={orientation === 'horizontal' ? 300 : 100}
-				expandToMin={true}
-				gutterAlign="center"
-				direction={orientation}
-			>
-				<Editor name={name} id="edit" className="markdown-edit" />
-				<div className=" container work_area ">
-					<h2>
-						<b style={{color: "white"}}>Here is the Preview</b>
-					</h2>
-					<div id="targetDiv"></div>
-				</div>
-			</Split>}
-		</div>
-	);
-}
+  const setUsers = (users) => {
+    console.log(users);
+    setActiveUsers(users);
+  };
+
+  return (
+    <div className="">
+      {show && <User setName={setUsername} setShow={setModalShow} />}
+      {!show && (
+        <>
+          <ActiveUsersModal
+            show={activeUsersmodalShow}
+            onHide={() => setActiveUsersModalShow(false)}
+            activeUsers={activeUsers}
+          />
+          <div className="active-users-btn-container">
+            <button
+              className="btn btn-primary text-end"
+              onClick={() => setActiveUsersModalShow(true)}
+            >
+              Active Users
+            </button>
+          </div>
+          <div className="work-area work">
+            <Split
+              className="wrapper-card"
+              sizes={[50, 50]}
+              minSize={orientation === "horizontal" ? 300 : 100}
+              expandToMin={true}
+              gutterAlign="center"
+              direction={orientation}
+            >
+              <Editor
+                name={name}
+                id="edit"
+                className="markdown-edit"
+                setUsers={setUsers}
+              />
+              <div className=" container work_area ">
+                <h2>
+                  <b style={{ color: "white" }}>Here is the Preview</b>
+                </h2>
+                <div id="targetDiv"></div>
+              </div>
+            </Split>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
 
 export default WorkArea;
