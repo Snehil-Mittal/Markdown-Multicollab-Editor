@@ -1,0 +1,27 @@
+#editor{
+    height: 500px;
+}
+.work_area{
+    height:550px;
+    /* overflow: hidden; */
+    overflow-y: auto;
+    overflow-x: auto;
+    margin-left: 5px;
+    background-color: #121D1C;
+    color: rgb(179, 177, 177);
+}
+
+
+.work_area::-webkit-scrollbar {
+    width: 10px;              
+  }
+  
+  .work_area::-webkit-scrollbar-track {
+    background: rgb(87, 85, 83);      
+  }
+  
+  .work_area::-webkit-scrollbar-thumb {
+    background-color: rgb(255, 255, 255);    
+    border-radius: 10px;       
+    border: 3px solid rgb(87, 85, 83);;  
+  }

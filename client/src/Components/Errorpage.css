@@ -1,0 +1,40 @@
+.error-template {
+	text-align: center;
+	color: white;
+}
+
+h1,
+.error-details {
+	color: white;
+	font-weight: 300;
+}
+
+.error-template h2 {
+	color: red;
+}
+
+.error-actions {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.error-actions .btn {
+	margin-right: 10px;
+}
+
+.pic {
+	width: 250px;
+}
+
+.error-grid {
+	padding-top: 50px;
+}
+
+.ebutton {
+	border-width: 1;
+	border-radius: 25px;
+	align-items: center;
+	justify-content: center;
+	padding: 10px 15px;
+	margin-top: 10px;
+}

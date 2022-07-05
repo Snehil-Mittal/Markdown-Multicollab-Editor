@@ -1,0 +1,59 @@
+.row {
+	margin-top: 60px;
+}
+.logo {
+	height: 150px;
+	width: 150px;
+	margin-top: 6%;
+}
+.create {
+	margin-top: 20px;
+}
+.join {
+	margin-top: 30px;
+}
+.btn-pos {
+	margin-top: 3%;
+}
+
+.start-grid {
+	padding-top: 20px;
+}
+.left-col {
+	padding-right: 100px;
+}
+.button1 {
+	border-width: 1;
+	border-radius: 25px;
+	align-items: center;
+	justify-content: center;
+	padding: 10px 15px;
+	margin-top: 10px;
+}
+
+.button2 {
+	border-width: 1;
+	border-radius: 25px;
+	align-items: center;
+	justify-content: center;
+	padding: 10px 15px;
+	margin-top: 10px;
+	margin-left: 20px;
+	margin-bottom: 10px;
+}
+.btn:hover {
+	background-color: var(--primary-text-color);
+	color: white;
+}
+.btn:focus {
+	outline: none;
+	box-shadow: none;
+}
+
+.join input {
+	width: 50%;
+	justify-content: center;
+	height: 46px;
+	border-radius: 8px;
+	padding-left: 15px;
+}
