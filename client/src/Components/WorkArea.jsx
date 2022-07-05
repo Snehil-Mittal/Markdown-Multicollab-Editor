@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Split from 'react-split';
-import Editor1 from './Editor';
+import Editor from './Editor';
 import User from './User';
 import DoUsername from "do_username";
 
@@ -37,7 +37,7 @@ const WorkArea=()=> {
 				gutterAlign="center"
 				direction={orientation}
 			>
-				<Editor1 name={name} id="edit" className="markdown-edit" />
+				<Editor name={name} id="edit" className="markdown-edit" />
 				<div className=" container work_area ">
 					<h2>
 						<b style={{color: "white"}}>Here is the Preview</b>

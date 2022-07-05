@@ -1,6 +1,6 @@
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import Quill from "quill";
 import QuillCursors from "quill-cursors";
@@ -19,15 +19,18 @@ const Editor = (props) => {
   const [isPresent, setIsPresent] = useState();
   //users for the set of active users
   const [users, setUsers] = useState([]);
-  var provider;
+  const provider = useRef();
   // console.log(id);
-  var awareness = null;
+  const awareness = useRef();
+  const quill = useRef();
+  const initialRender = useRef(false);
+  const data = useRef();
   const connect = (room) => {
     try {
       const ydoc = new Y.Doc();
-      provider = new WebrtcProvider(room, ydoc);
+      provider.current = new WebrtcProvider(room, ydoc);
       const yText = ydoc.getText("quill");
-      const quill = new Quill("#editor", {
+      quill.current = new Quill("#editor", {
         modules: {
           cursors: true,
           toolbar: [],
@@ -39,37 +42,50 @@ const Editor = (props) => {
         theme: "snow",
       });
 
-      awareness = provider.awareness;
+      awareness.current = provider.current.awareness;
       const setUsername = () => {
-        awareness.setLocalStateField("user", {
+        awareness.current.setLocalStateField("user", {
           name: props.name,
           color: randomColor(),
         });
       };
       setUsername();
-      const binding = new QuillBinding(yText, quill, awareness);
-
+      const binding = new QuillBinding(yText, quill.current, awareness.current);
       yText.observe((a, b) => {
         var showdown = require("showdown");
         var converter = new showdown.Converter();
-        var text = quill.getText();
+        var text = quill.current.getText();
         var html = converter.makeHtml(text);
         var target = document.getElementById("targetDiv");
         console.log(html);
         target.innerHTML = html;
       });
-      awareness.on("change", () => {
+      let count = 0;
+      awareness.current.on("change", () => {
+        // console.log(awareness);
         const newUsers = [];
-        awareness.getStates().forEach((state) => {
+        awareness.current.getStates().forEach((state) => {
           if (state.user) {
             newUsers.push(state.user);
           }
         });
         setUsers(newUsers);
       });
+      setTimeout(() => {
+        console.log(provider.current.connected);
+        awareness.current.getStates().forEach((state) => {
+          if (state.user) {
+            count = count + 1;
+          }
+        });
+        if (count === 1 && data.current.length > 0) {
+          quill.current.setText(data.current[data.current.length - 1]);
+        }
+      }, 500);
     } catch (e) {
       console.log(e);
     }
+    initialRender.current = true;
   };
 
   useEffect(() => {
@@ -81,8 +97,9 @@ const Editor = (props) => {
   useEffect(() => {
     const checkServer = async (id) => {
       try {
-        const res = await axios.get(`https://markdown-multicollab-editor.herokuapp.com/${id}`);
+        const res = await axios.get(`${process.env.REACT_APP_URL}/${id}`);
         console.log(res);
+        if (res.data.isPresent) data.current = res.data?.room?.values;
         setIsPresent(res.data.isPresent);
       } catch (err) {
         setIsPresent(false);
@@ -96,14 +113,25 @@ const Editor = (props) => {
     }
 
     return () => {
-      provider?.destroy();
-      console.log(provider);
+      provider.current?.destroy();
+      console.log(provider.current);
     };
   }, []);
+
+  const saveData = async () => {
+    const text = quill.current.getText();
+    const res = await axios.post(`${process.env.REACT_APP_URL}/${id}`, {
+      text,
+    });
+    return;
+  };
 
   return (
     <div className="edit">
       <div id="editor"></div>
+      <button onClick={saveData} className="btn btn-outline-success">
+        Save
+      </button>
     </div>
   );
 };
