@@ -1,21 +1,23 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const showdown = require("showdown");
-const passport = require("passport");
-const jwt = require("jwt-simple");
-const LocalStrategy = require("passport-local").Strategy;
-const { admin, admin_password, secret } = require("./config");
-const { v4: uuid } = require("uuid");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const Room = require("./Models/Room/Room");
+// const showdown = require("showdown");
+// const passport = require("passport");
+// const jwt = require("jwt-simple");
+// const LocalStrategy = require("passport-local").Strategy;
+// const { admin, admin_password, secret } = require("./config");
+// const { v4: uuid } = require("uuid");
 
 var app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-mongoose.connect("mongodb://localhost:27017/ColabApp");
+mongoose.connect(
+  "mongodb+srv://techuser:techpassword@cluster0.ehdq86u.mongodb.net/?retryWrites=true&w=majority"
+);
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", function () {
@@ -25,17 +27,17 @@ db.once("open", function () {
 // converter = new showdown.Converter();
 // converter.setOption("simplifiedAutoLink", "true");
 
-const servers = ["quill-demo-awareness-room", "asdfasdf"];
+// const servers = ["quill-demo-awareness-room", "asdfasdf"];
 
-passport.use(
-  new LocalStrategy(function (username, password, done) {
-    if (username === admin && password === admin_password) {
-      done(null, jwt.encode({ username }, secret));
-      return;
-    }
-    done(null, false);
-  })
-);
+// passport.use(
+//   new LocalStrategy(function (username, password, done) {
+//     if (username === admin && password === admin_password) {
+//       done(null, jwt.encode({ username }, secret));
+//       return;
+//     }
+//     done(null, false);
+//   })
+// );
 
 app.get("/createNew", async (req, res) => {
   const newRoom = new Room({ version: 0 });
@@ -47,8 +49,15 @@ app.get("/createNew", async (req, res) => {
 
 app.get("/:id", async (req, res) => {
   const id = req.params.id;
+  console.log(id);
   let isPresent = false;
-  const room = await Room.findById(id);
+  let room;
+  try {
+    room = await Room.findById(id);
+  } catch (err) {
+    console.log(err);
+    return res.status(404).json({ isPresent });
+  }
   if (room) {
     isPresent = true;
     return res.json({ room, isPresent });
@@ -59,11 +68,17 @@ app.post("/:id", async (req, res) => {
   const body = req.body.text;
   console.log(req.body);
   const id = req.params.id;
-  const room = await Room.findById(id);
-  if (!room) return res.status(404).send();
-  room.values.push(body);
-  room.version = room.version + 1;
-  await room.save();
+  let room;
+  try {
+    room = await Room.findById(id);
+    if (!room) return res.status(404).send();
+    room.values.push(body);
+    room.version = room.version + 1;
+    await room.save();
+  } catch (err) {
+    console.log(err);
+    return res.status(404).json({ isPresent });
+  }
   res.send({ success: true });
 });
 
@@ -98,19 +113,19 @@ const server = app.listen(3001, function () {
   console.log("Server running on port 3001");
 });
 
-const io = require("socket.io")(server, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["my-custom-header"],
-    credentials: true,
-  },
-});
-io.on("connection", (socket) => {
-  console.log("connected user");
-  io.emit("welcome", "server socket");
-  socket.on("addUserToRoom", (userId) => {});
-  socket.on("disconnect", () => {
-    console.log("disconnected");
-  });
-});
+// const io = require("socket.io")(server, {
+//   cors: {
+//     origin: "http://localhost:3000",
+//     methods: ["GET", "POST"],
+//     allowedHeaders: ["my-custom-header"],
+//     credentials: true,
+//   },
+// });
+// io.on("connection", (socket) => {
+//   console.log("connected user");
+//   io.emit("welcome", "server socket");
+//   socket.on("addUserToRoom", (userId) => {});
+//   socket.on("disconnect", () => {
+//     console.log("disconnected");
+//   });
+// });
