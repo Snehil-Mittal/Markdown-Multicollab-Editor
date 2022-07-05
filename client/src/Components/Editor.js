@@ -81,7 +81,7 @@ const Editor = (props) => {
         if (count === 1 && data.current.length > 0) {
           quill.current.setText(data.current[data.current.length - 1]);
         }
-      }, 500);
+      }, 1000);
     } catch (e) {
       console.log(e);
     }
