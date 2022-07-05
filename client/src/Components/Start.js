@@ -1,4 +1,4 @@
-import React, {useState } from 'react';
+import React, { useState } from 'react';
 import './Start.css';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
@@ -10,6 +10,7 @@ export default function Start() {
 	const history = useHistory();
 	const handleCreate = async () => {
 		try {
+			console.log(`${process.env.REACT_APP_URL}/createNew`);
 			const res = await axios.get(`${process.env.REACT_APP_URL}/createNew`);
 			//console.log(res);
 			setRoomId(res.data.id);
