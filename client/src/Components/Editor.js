@@ -58,7 +58,7 @@ const Editor = (props) => {
         console.log(html);
         target.innerHTML = html;
       });
-      let count = 0;
+      props.setUsers([{ name: props.name }]);
       awareness.current.on("change", () => {
         // console.log(awareness);
         const newUsers = [];
