@@ -18,12 +18,10 @@ const Editor = (props) => {
   const history = useHistory();
   const [isPresent, setIsPresent] = useState();
   //users for the set of active users
-  const [users, setUsers] = useState([]);
   const provider = useRef();
   // console.log(id);
   const awareness = useRef();
   const quill = useRef();
-  const initialRender = useRef(false);
   const data = useRef();
   const connect = (room) => {
     try {
@@ -69,7 +67,7 @@ const Editor = (props) => {
             newUsers.push(state.user);
           }
         });
-        setUsers(newUsers);
+        props.setUsers(newUsers);
       });
       // setTimeout(() => {
       //   console.log(provider.current.connected);
@@ -81,11 +79,10 @@ const Editor = (props) => {
       //   if (count === 1 && data.current.length > 0) {
       //     quill.current.setText(data.current[data.current.length - 1]);
       //   }
-      // }, 1000);
+      // }, 500);
     } catch (e) {
       console.log(e);
     }
-    initialRender.current = true;
   };
 
   useEffect(() => {
