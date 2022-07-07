@@ -287,6 +287,9 @@ body {
 	display: flex;
 	justify-content: end;
 }
+.active-users-btn-container button {
+	padding: 5px 10px;
+}
 
 .active-users-modal-body {
 	max-height: 50vh;
