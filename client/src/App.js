@@ -14,7 +14,7 @@ export default function App() {
 			<div className="shade">
 				<Navbar />
 
-				<h2 style={{color: "goldenrod"}}>Markdown Editor</h2>
+				<h2 style={{ color: 'goldenrod' }}>Markdown Editor</h2>
 				<Router history={history}>
 					<Switch>
 						<Route exact path="/" component={Start} />

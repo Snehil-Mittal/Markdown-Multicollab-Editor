@@ -23,7 +23,6 @@
 	box-shadow: #24292e;
 	overflow: hidden;
 	overflow-y: scroll;
-
 }
 
 .App-header {
@@ -81,7 +80,7 @@ body {
 	margin: 0;
 	/* color: var(--primary-text-color); */
 	font-family: var(--open-sans-font);
-	background-color: #161B22;
+	background-color: #161b22;
 	color: white;
 }
 
@@ -321,7 +320,6 @@ body {
 }
 
 @media screen and (min-width: 600px) {
-
 	.markdown-edit,
 	.markdown-preview {
 		height: 100% !important;

@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-// connecting to mongodb 
+// connecting to mongodb
 mongoose.connect(api_url);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -64,24 +64,23 @@ app.post('/:id', async (req, res) => {
 	res.send({ success: true });
 });
 
-
 const server = app.listen(PORT, function () {
 	console.log('Server running on port 3001');
 });
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.resolve(__dirname, "client", "build")));
-  app.get("/*", function (req, res) {
-    // this -->
-    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
-  });
+if (process.env.NODE_ENV === 'production') {
+	app.use(express.static(path.resolve(__dirname, 'client', 'build')));
+	app.get('/*', function (req, res) {
+		// this -->
+		res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+	});
 }
 
 // Handle unhandled promise rejections
-process.on("unhandledRejection", (err, promise) => {
-  console.log(`Error: ${err.message}`);
+process.on('unhandledRejection', (err, promise) => {
+	console.log(`Error: ${err.message}`);
 });
 
-process.on("uncaughtException", (err, promise) => {
-  console.log(`Error: ${err.message}`);
+process.on('uncaughtException', (err, promise) => {
+	console.log(`Error: ${err.message}`);
 });
