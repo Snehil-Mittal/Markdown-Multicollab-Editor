@@ -7,7 +7,6 @@ const User = (props) => {
   const [uname, setUname] = useState();
   const [show, setShow] = useState(true);
   const handleClose = (name) => {
-    //console.log(name);
     setShow(false);
     props.setShow(false);
   };
@@ -32,7 +31,6 @@ const User = (props) => {
             handleChange(e);
           }}
         />
-        {/* <Modal.Footer> */}
         <Button
           className="btn btn-outline-primary"
           id="userNamebtn"
@@ -41,7 +39,6 @@ const User = (props) => {
         >
           Join Room
         </Button>
-        {/* </Modal.Footer> */}
       </Modal>
     </>
   );
