@@ -29,7 +29,6 @@ const WorkArea = () => {
   };
 
   const setUsers = (users) => {
-    console.log(users);
     setActiveUsers(users);
   };
 

@@ -12,7 +12,6 @@ export default function Start() {
 		try {
 			console.log(`${process.env.REACT_APP_URL}/createNew`);
 			const res = await axios.get(`${process.env.REACT_APP_URL}/createNew`);
-			//console.log(res);
 			setRoomId(res.data.id);
 			history.push(`/rooms/${res.data.id}`);
 		} catch (err) {

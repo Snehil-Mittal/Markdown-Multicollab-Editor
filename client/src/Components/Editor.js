@@ -17,9 +17,7 @@ const Editor = (props) => {
   let { id } = useParams();
   const history = useHistory();
   const [isPresent, setIsPresent] = useState();
-  //users for the set of active users
   const provider = useRef();
-  // console.log(id);
   const awareness = useRef();
   const quill = useRef();
   const data = useRef();
@@ -55,12 +53,10 @@ const Editor = (props) => {
         var text = quill.current.getText();
         var html = converter.makeHtml(text);
         var target = document.getElementById("targetDiv");
-        console.log(html);
         target.innerHTML = html;
       });
       props.setUsers([{ name: props.name }]);
       awareness.current.on("change", () => {
-        // console.log(awareness);
         const newUsers = [];
         awareness.current.getStates().forEach((state) => {
           if (state.user) {
@@ -69,24 +65,12 @@ const Editor = (props) => {
         });
         props.setUsers(newUsers);
       });
-      // setTimeout(() => {
-      //   console.log(provider.current.connected);
-      //   awareness.current.getStates().forEach((state) => {
-      //     if (state.user) {
-      //       count = count + 1;
-      //     }
-      //   });
-      //   if (count === 1 && data.current.length > 0) {
-      //     quill.current.setText(data.current[data.current.length - 1]);
-      //   }
-      // }, 500);
     } catch (e) {
       console.log(e);
     }
   };
 
   useEffect(() => {
-    console.log(isPresent);
     if (isPresent === false) history.push("/PageNotFound");
     else if (isPresent === true) connect(id);
   }, [isPresent, history]);
@@ -104,7 +88,6 @@ const Editor = (props) => {
       }
     };
     const isPresent = checkServer(id);
-    console.log(isPresent);
     if (isPresent === false) {
       history.push("PageNotFound");
     }
