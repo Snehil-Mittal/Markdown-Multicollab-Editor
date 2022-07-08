@@ -68,7 +68,7 @@ const Editor = (props) => {
 
   useEffect(() => {
     console.log("Editor: ", props.isPresent);
-    connect();
+    connect(id);
     return () => {
       provider.current?.destroy();
       awareness.current?.destroy();

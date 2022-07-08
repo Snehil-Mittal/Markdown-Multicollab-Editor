@@ -55,6 +55,8 @@ const WorkArea = () => {
     setActiveUsers(users);
   };
 
+  const text = `${name} invited you to collaborate in real-time on his Editor. Click the link below to join. `;
+
   return (
     <div className="">
       {isPresent && show && (
@@ -73,6 +75,21 @@ const WorkArea = () => {
               onClick={() => setActiveUsersModalShow(true)}
             >
               Active Users
+            </button>
+            <button
+              className="btn btn-primary text-end"
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(
+                    text + window.location.href
+                  );
+                  alert("Copied to clipboard successfully!");
+                } catch (err) {
+                  alert("Copy failed: " + err);
+                }
+              }}
+            >
+              Copy Invite Link
             </button>
           </div>
           <div className="work-area work">
